@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/ticker/AAPL/range/1/day/2025-02-09/2025-02-10"
+  },
+  "response": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status": 200,
+    "jsonBody": {
+      "ticker": "AAPL",
+      "queryCount": 1,
+      "resultsCount": 1,
+      "adjusted": true,
+      "results": [
+        {
+          "v": 33096475,
+          "vw": 228.45,
+          "o": 229.57,
+          "c": 227.65,
+          "h": 230.585,
+          "l": 227.2,
+          "t": 1739163600000,
+          "n": 398258
+        }
+      ],
+      "status": "OK",
+      "request_id": "82c081664c6b97d452133dad836ead44",
+      "count": 1
+    }
+  }
+}

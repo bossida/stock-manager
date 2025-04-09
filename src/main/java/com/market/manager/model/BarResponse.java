@@ -22,7 +22,7 @@ public class BarResponse {
     @JsonProperty("l")
     private BigDecimal lowest;
     @JsonProperty("t")
-    private Timestamp startTime;
+    private Timestamp date;
     @JsonProperty("n")
     private Long transactions;
 

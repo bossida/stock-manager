@@ -1,10 +1,15 @@
 package com.market.manager.service;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.maciejwalkowiak.wiremock.spring.ConfigureWireMock;
+import com.maciejwalkowiak.wiremock.spring.EnableWireMock;
+import com.maciejwalkowiak.wiremock.spring.InjectWireMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.wiremock.spring.ConfigureWireMock;
-import org.wiremock.spring.EnableWireMock;
+
+
 
 import java.time.LocalDate;
 
@@ -15,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableWireMock(
         @ConfigureWireMock(
                  name = "jsonplaceholder",
-                 baseUrlProperties = "api.url"  //the property to inject the wiremock host and portname into
+                 property = "api.url"
         )
 )
 class StockServiceTest {
@@ -23,11 +28,17 @@ class StockServiceTest {
     @Autowired
     StockService stockService;
 
-    @Test
-    void test(){
-        var from = LocalDate.parse("2025-02-09");
-        var to = LocalDate.parse("2025-02-10");
-        stockService.fetchAndSaveStockData("AAPL", from, to);
-    }
+    @InjectWireMock("jsonplaceholder")
+    private WireMockServer wiremock;
+
+//    @Test
+//    void test(){
+//        //WireMock.listAllStubMappings();
+//        wiremock.getStubMappings();
+//        wiremock.getServeEvents().getServeEvents().forEach(x -> System.out.println(x.getRequest()));
+//        var from = LocalDate.parse("2025-02-09");
+//        var to = LocalDate.parse("2025-02-10");
+//        stockService.fetchAndSaveStockData("AAPL", from, to);
+//    }
 
 }
