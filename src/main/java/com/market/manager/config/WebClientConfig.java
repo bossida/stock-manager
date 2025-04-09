@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
     @Value("${api.url}")
     private String baseUrl;
-    @Value("polygon.api.key")
+    @Value("${polygon.api.key}")
     private String apiKey;
 
     @Bean

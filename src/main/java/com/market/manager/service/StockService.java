@@ -33,9 +33,9 @@ public class StockService {
     }
 
     private void saveData(List<StockPrice> repoData) {
-//        for (StockPrice price : repoData){
-//            repository.save(price);
-//        }
+        for (StockPrice price : repoData){
+            repository.save(price);
+        }
     }
 
     private List<StockPrice> mapToRepository(StockResponse stockData) {
