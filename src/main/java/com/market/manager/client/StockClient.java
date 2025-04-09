@@ -3,7 +3,6 @@ package com.market.manager.client;
 
 import com.market.manager.model.StockResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 

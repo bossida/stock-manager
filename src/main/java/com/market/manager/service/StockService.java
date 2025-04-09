@@ -17,10 +17,11 @@ import static com.market.manager.constants.ApplicationConstants.MULTIPLIER;
 import static com.market.manager.constants.ApplicationConstants.TIME_SPAN;
 import static com.market.manager.constants.Errors.STOCK_NOT_FOUND;
 
+
 @Service
 public class StockService {
-    private StockClient stockClient;
-    private StockPriceRepository repository;
+    private final StockClient stockClient;
+    private final StockPriceRepository repository;
 
     public StockService(StockClient stockClient, StockPriceRepository repository) {
         this.stockClient = stockClient;
@@ -46,7 +47,6 @@ public class StockService {
         var stockData = stockClient.getStock(companySymbol, MULTIPLIER, TIME_SPAN, fromDate, toDate);
         var repoData = mapToRepository(stockData);
         saveData(repoData);
-        System.out.println("getting stock data");
     }
 
     public StockPriceDto getStockBySymbolAndDate(String companySymbol, LocalDate date) throws StockPriceNotFoundException {

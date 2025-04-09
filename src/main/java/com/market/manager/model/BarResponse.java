@@ -1,6 +1,7 @@
 package com.market.manager.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.sql.Timestamp;
 
 
 @Data
+@Builder
 public class BarResponse {
     @JsonProperty("v")
     private Long volume;

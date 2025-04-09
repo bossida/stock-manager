@@ -8,13 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 @RestController
 @RequestMapping("stocks")
 public class StockController {
 
-    private StockService stockService;
+    private final StockService stockService;
 
     public StockController(StockService stockService){
         this.stockService = stockService;
