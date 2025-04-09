@@ -1,5 +1,7 @@
 package com.market.manager.controller;
 
+import com.market.manager.dto.StockPriceDto;
+import com.market.manager.exception.StockPriceNotFoundException;
 import com.market.manager.service.StockService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +21,23 @@ public class StockController {
     }
 
     @PostMapping("/fetch")
-    public ResponseEntity<String> fetchAndSaveStockData(
+    public ResponseEntity<Void> fetchAndSaveStockData(
             @RequestParam String companySymbol,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
 
         stockService.fetchAndSaveStockData(companySymbol, fromDate, toDate);
-        return ResponseEntity.ok("Stock data fetched and saved successfully.");
+        return ResponseEntity.ok().build();
     }
 
 
     @GetMapping("/{companySymbol}")
-    public ResponseEntity<String> getStockBySymbolAndDate(
+    public ResponseEntity<StockPriceDto> getStockBySymbolAndDate(
             @PathVariable String companySymbol,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) throws StockPriceNotFoundException {
 
-        //StockPrice stock = stockService.getStockBySymbolAndDate(companySymbol, date);
-        return ResponseEntity.ok("Operation success");
+        var stock = stockService.getStockBySymbolAndDate(companySymbol, date);
+        return ResponseEntity.ok(stock);
     }
 
 }

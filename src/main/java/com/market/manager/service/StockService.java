@@ -1,7 +1,8 @@
 package com.market.manager.service;
 
 import com.market.manager.client.StockClient;
-import com.market.manager.constants.ApplicationConstants;
+import com.market.manager.dto.StockPriceDto;
+import com.market.manager.exception.StockPriceNotFoundException;
 import com.market.manager.mapper.StockMapper;
 import com.market.manager.model.StockPrice;
 import com.market.manager.model.StockResponse;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static com.market.manager.constants.ApplicationConstants.MULTIPLIER;
 import static com.market.manager.constants.ApplicationConstants.TIME_SPAN;
+import static com.market.manager.constants.Errors.STOCK_NOT_FOUND;
 
 @Service
 public class StockService {
@@ -23,13 +25,6 @@ public class StockService {
     public StockService(StockClient stockClient, StockPriceRepository repository) {
         this.stockClient = stockClient;
         this.repository = repository;
-    }
-
-    public void fetchAndSaveStockData(String companySymbol, LocalDate fromDate, LocalDate toDate) {
-        var stockData = stockClient.getStock(companySymbol, MULTIPLIER, TIME_SPAN, fromDate, toDate);
-        var repoData = mapToRepository(stockData);
-        saveData(repoData);
-        System.out.println("getting stock data");
     }
 
     private void saveData(List<StockPrice> repoData) {
@@ -47,5 +42,20 @@ public class StockService {
         return stockPrices;
     }
 
+    public void fetchAndSaveStockData(String companySymbol, LocalDate fromDate, LocalDate toDate) {
+        var stockData = stockClient.getStock(companySymbol, MULTIPLIER, TIME_SPAN, fromDate, toDate);
+        var repoData = mapToRepository(stockData);
+        saveData(repoData);
+        System.out.println("getting stock data");
+    }
+
+    public StockPriceDto getStockBySymbolAndDate(String companySymbol, LocalDate date) throws StockPriceNotFoundException {
+        var stock = repository.findByCompanySymbolAndDate(companySymbol, date);
+        if (stock.isPresent()){
+            return StockMapper.INSTANCE.stockPriceToDto(stock.get());
+        }else{
+            throw new StockPriceNotFoundException(STOCK_NOT_FOUND);
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.market.manager.mapper;
 
+import com.market.manager.dto.StockPriceDto;
 import com.market.manager.model.BarResponse;
 import com.market.manager.model.StockPrice;
 import org.mapstruct.Mapper;
@@ -21,6 +22,8 @@ public interface StockMapper {
     @Mapping(source = "bar.lowest", target = "lowPrice")
     @Mapping(source = "symbol", target = "companySymbol")
     StockPrice barToStock(BarResponse bar, String symbol);
+
+    StockPriceDto stockPriceToDto(StockPrice stockPrice);
 
     default LocalDate fromTimestamp(Timestamp timestamp) {
         return LocalDate.ofInstant(timestamp.toInstant(), ZoneId.of("UTC"));

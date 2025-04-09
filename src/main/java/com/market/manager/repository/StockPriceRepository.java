@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface StockPriceRepository extends JpaRepository<StockPrice, Long> {
 
+    Optional<StockPrice> findByCompanySymbolAndDate(String companySymbol, LocalDate date);
+
 }
