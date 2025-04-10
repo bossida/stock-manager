@@ -13,7 +13,9 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "stock_prices")
+@Table(name = "stock_prices", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"company_symbol", "date"})
+})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

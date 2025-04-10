@@ -1,6 +1,8 @@
 package com.market.manager.controller;
 
+import com.market.manager.dto.FetchInputDto;
 import com.market.manager.dto.StockPriceDto;
+import com.market.manager.exception.InvalidDateException;
 import com.market.manager.exception.StockPriceNotFoundException;
 import com.market.manager.service.StockService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,12 +22,9 @@ public class StockController {
     }
 
     @PostMapping("/fetch")
-    public ResponseEntity<Void> fetchAndSaveStockData(
-            @RequestParam String companySymbol,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+    public ResponseEntity<Void> fetchAndSaveStockData(@RequestBody FetchInputDto request) throws InvalidDateException {
 
-        stockService.fetchAndSaveStockData(companySymbol, fromDate, toDate);
+        stockService.fetchAndSaveStockData(request.getCompanySymbol(), request.getFromDate(), request.getToDate());
         return ResponseEntity.ok().build();
     }
 

@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDate;
 
 @Component
-public class StockClient {
+public class PolygonClient {
     @Autowired
     private WebClient webClient;
 

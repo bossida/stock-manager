@@ -1,12 +1,14 @@
 package com.market.manager.service;
 
-import com.market.manager.client.StockClient;
+import com.market.manager.client.PolygonClient;
 import com.market.manager.dto.StockPriceDto;
+import com.market.manager.exception.InvalidDateException;
 import com.market.manager.exception.StockPriceNotFoundException;
 import com.market.manager.mapper.StockMapper;
 import com.market.manager.model.StockPrice;
 import com.market.manager.model.StockResponse;
 import com.market.manager.repository.StockPriceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,22 +17,27 @@ import java.util.List;
 
 import static com.market.manager.constants.ApplicationConstants.MULTIPLIER;
 import static com.market.manager.constants.ApplicationConstants.TIME_SPAN;
-import static com.market.manager.constants.Errors.STOCK_NOT_FOUND;
+import static com.market.manager.constants.Errors.*;
 
-
+@Slf4j
 @Service
 public class StockService {
-    private final StockClient stockClient;
+    private final PolygonClient polygonClient;
     private final StockPriceRepository repository;
 
-    public StockService(StockClient stockClient, StockPriceRepository repository) {
-        this.stockClient = stockClient;
+    public StockService(PolygonClient polygonClient, StockPriceRepository repository) {
+        this.polygonClient = polygonClient;
         this.repository = repository;
     }
 
     private void saveData(List<StockPrice> repoData) {
-        for (StockPrice price : repoData){
-            repository.save(price);
+        for (var stockPrice : repoData){
+            var stock = repository.findByCompanySymbolAndDate(stockPrice.getCompanySymbol(), stockPrice.getDate());
+            if (stock.isEmpty()){
+                repository.save(stockPrice);
+            }else{
+                log.warn(STOCK_DATE_ALREADY_EXISTS);
+            }
         }
     }
 
@@ -43,8 +50,11 @@ public class StockService {
         return stockPrices;
     }
 
-    public void fetchAndSaveStockData(String companySymbol, LocalDate fromDate, LocalDate toDate) {
-        var stockData = stockClient.getStock(companySymbol, MULTIPLIER, TIME_SPAN, fromDate, toDate);
+    public void fetchAndSaveStockData(String companySymbol, LocalDate fromDate, LocalDate toDate) throws InvalidDateException {
+        if (fromDate.isEqual(toDate) || fromDate.isAfter(toDate)){
+            throw new InvalidDateException(INVALID_DATES);
+        }
+        var stockData = polygonClient.getStock(companySymbol, MULTIPLIER, TIME_SPAN, fromDate, toDate);
         var repoData = mapToRepository(stockData);
         saveData(repoData);
     }

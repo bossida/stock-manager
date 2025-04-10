@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @EnableWireMock(
         @ConfigureWireMock(
-                 name = "jsonplaceholder",
+                 name = "polygon",
                  property = "api.url"
         )
 )
@@ -30,8 +30,10 @@ class StockServiceIntegrationTest {
     @Autowired
     StockService stockService;
 
-    @InjectWireMock("jsonplaceholder")
+    @InjectWireMock("polygon")
     private WireMockServer wiremock;
+
+    private final static String SYMBOL = "AAPL";
 
 
     @Test
@@ -39,20 +41,20 @@ class StockServiceIntegrationTest {
     void GivenDataExists_WhenGetStockIsCalled_ThenReturnSuccess() {
         var from = LocalDate.of(2025, 2, 9);
         var to = LocalDate.of(2025, 2, 10);
-        stockService.fetchAndSaveStockData("AAPL", from, to);
-        var dto = stockService.getStockBySymbolAndDate("AAPL", to);
+        stockService.fetchAndSaveStockData(SYMBOL, from, to);
+        var dto = stockService.getStockBySymbolAndDate(SYMBOL, to);
         assertThat(dto).isNotNull();
     }
 
     @Test
     @SneakyThrows
-    void GivenDataExists_WhenGetStockIsCalled_ThenReturnEmpty() {
+    void GivenDataDoesNotExist_WhenGetStockIsCalled_ThenThrowException() {
         var from = LocalDate.of(2025, 2, 9);
         var to = LocalDate.of(2025, 2, 10);
         var search = LocalDate.of(2020, 4, 1);
-        stockService.fetchAndSaveStockData("AAPL", from, to);
+        stockService.fetchAndSaveStockData(SYMBOL, from, to);
         assertThatExceptionOfType(StockPriceNotFoundException.class)
-                .isThrownBy(() -> stockService.getStockBySymbolAndDate("AAPL", search));
+                .isThrownBy(() -> stockService.getStockBySymbolAndDate(SYMBOL, search));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.market.manager.unit.service;
 
-import com.market.manager.client.StockClient;
+import com.market.manager.client.PolygonClient;
 import com.market.manager.exception.StockPriceNotFoundException;
 import com.market.manager.model.BarResponse;
 import com.market.manager.model.StockPrice;
@@ -31,7 +31,7 @@ import java.util.Optional;
 public class StockServiceTest {
 
     @Mock
-    private  StockClient stockClient;
+    private PolygonClient polygonClient;
 
     @Mock
     private  StockPriceRepository repository;
@@ -88,21 +88,23 @@ public class StockServiceTest {
     }
 
     @Test
+    @SneakyThrows
     void GivenDataExists_WhenFetchIsCalled_ThenDataIsSaved(){
         var dateFrom = LocalDate.of(2025, 2, 9);
         var dateTo = LocalDate.of(2025, 2, 10);
         var stockResponse = buildStockResponse();
-        when(stockClient.getStock(SYMBOL, MULTIPLIER, TIME_SPAN, dateFrom, dateTo)).thenReturn(stockResponse);
+        when(polygonClient.getStock(SYMBOL, MULTIPLIER, TIME_SPAN, dateFrom, dateTo)).thenReturn(stockResponse);
         stockService.fetchAndSaveStockData(SYMBOL, dateFrom, dateTo);
         verify(repository, times(1)).save(any(StockPrice.class));
     }
 
     @Test
+    @SneakyThrows
     void GivenDataDoesNotExists_WhenFetchIsCalled_ThenDataIsNotSaved(){
         var from = LocalDate.of(2025, 2, 9);
         var to = LocalDate.of(2025, 2, 10);
         var emptyStock = buildEmptyStock();
-        when(stockClient.getStock(SYMBOL, MULTIPLIER, TIME_SPAN, from, to)).thenReturn(emptyStock);
+        when(polygonClient.getStock(SYMBOL, MULTIPLIER, TIME_SPAN, from, to)).thenReturn(emptyStock);
         stockService.fetchAndSaveStockData(SYMBOL, from, to);
         verifyNoInteractions(repository);
     }
