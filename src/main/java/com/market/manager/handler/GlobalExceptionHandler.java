@@ -18,13 +18,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StockPriceNotFoundException.class)
     public ResponseEntity<Object> handleStockNotFound(StockPriceNotFoundException ex) {
         var body = new HashMap<String, Object>();
-        body.put("error", "Not Found");
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidDateException.class)
-    public ResponseEntity<Object> handleSInvalidDate(InvalidDateException ex) {
+    public ResponseEntity<Object> handleInvalidDate(InvalidDateException ex) {
         var body = new HashMap<String, Object>();
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);

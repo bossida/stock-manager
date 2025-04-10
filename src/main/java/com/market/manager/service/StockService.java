@@ -50,11 +50,28 @@ public class StockService {
         return stockPrices;
     }
 
-    public void fetchAndSaveStockData(String companySymbol, LocalDate fromDate, LocalDate toDate) throws InvalidDateException {
+    private boolean validateDataExists(StockResponse stockData){
+        return stockData.getQueryCount() > 0 && stockData.getResults() != null && !stockData.getResults().isEmpty();
+    }
+
+
+    private void validateDates(LocalDate fromDate, LocalDate toDate) throws InvalidDateException {
         if (fromDate.isEqual(toDate) || fromDate.isAfter(toDate)){
             throw new InvalidDateException(INVALID_DATES);
         }
+        if (fromDate.isAfter(LocalDate.now()) || toDate.isAfter(LocalDate.now())){
+            throw new InvalidDateException(INVALID_DATES_FUTURE);
+        }
+    }
+
+
+    public void fetchAndSaveStockData(String companySymbol, LocalDate fromDate, LocalDate toDate) throws StockPriceNotFoundException, InvalidDateException {
+        validateDates(fromDate, toDate);
         var stockData = polygonClient.getStock(companySymbol, MULTIPLIER, TIME_SPAN, fromDate, toDate);
+        var exists = validateDataExists(stockData);
+        if (!exists){
+            throw new StockPriceNotFoundException(STOCK_NOT_FOUND);
+        }
         var repoData = mapToRepository(stockData);
         saveData(repoData);
     }

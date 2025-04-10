@@ -105,7 +105,8 @@ public class StockServiceTest {
         var to = LocalDate.of(2025, 2, 10);
         var emptyStock = buildEmptyStock();
         when(polygonClient.getStock(SYMBOL, MULTIPLIER, TIME_SPAN, from, to)).thenReturn(emptyStock);
-        stockService.fetchAndSaveStockData(SYMBOL, from, to);
+        assertThatExceptionOfType(StockPriceNotFoundException.class)
+                .isThrownBy(() ->  stockService.fetchAndSaveStockData(SYMBOL, from, to));
         verifyNoInteractions(repository);
     }
 

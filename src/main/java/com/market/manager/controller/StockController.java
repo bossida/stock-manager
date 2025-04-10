@@ -25,7 +25,7 @@ public class StockController {
     }
 
     @PostMapping("/fetch")
-    public ResponseEntity<Void> fetchAndSaveStockData(@Valid @RequestBody FetchInputDto request) throws InvalidDateException {
+    public ResponseEntity<Void> fetchAndSaveStockData(@Valid @RequestBody FetchInputDto request) throws InvalidDateException, StockPriceNotFoundException {
         stockService.fetchAndSaveStockData(request.getCompanySymbol(), request.getFromDate(), request.getToDate());
         return ResponseEntity.ok().build();
     }
