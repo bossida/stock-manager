@@ -1,6 +1,7 @@
 package com.market.manager.unit.service;
 
 import com.market.manager.client.PolygonClient;
+import com.market.manager.exception.InvalidDateException;
 import com.market.manager.exception.StockPriceNotFoundException;
 import com.market.manager.model.BarResponse;
 import com.market.manager.model.StockPrice;
@@ -96,6 +97,28 @@ public class StockServiceTest {
         when(polygonClient.getStock(SYMBOL, MULTIPLIER, TIME_SPAN, dateFrom, dateTo)).thenReturn(stockResponse);
         stockService.fetchAndSaveStockData(SYMBOL, dateFrom, dateTo);
         verify(repository, times(1)).save(any(StockPrice.class));
+    }
+
+    @Test
+    @SneakyThrows
+    void GivenDateFromGreaterThanDateTo_WhenFetchIsCalled_ThenThrowError(){
+        var dateFrom = LocalDate.of(2025, 2, 19);
+        var dateTo = LocalDate.of(2025, 2, 10);
+
+        assertThatExceptionOfType(InvalidDateException.class)
+                .isThrownBy(() ->  stockService.fetchAndSaveStockData(SYMBOL, dateFrom, dateTo));
+        verifyNoInteractions(repository);
+    }
+
+    @Test
+    @SneakyThrows
+    void GivenDateInTheFuture_WhenFetchIsCalled_ThenThrowError(){
+        var dateFrom = LocalDate.now().plusDays(10);
+        var dateTo = LocalDate.now().plusDays(15);
+
+        assertThatExceptionOfType(InvalidDateException.class)
+                .isThrownBy(() ->  stockService.fetchAndSaveStockData(SYMBOL, dateFrom, dateTo));
+        verifyNoInteractions(repository);
     }
 
     @Test

@@ -38,7 +38,7 @@ class StockServiceIntegrationTest {
 
     @Test
     @SneakyThrows
-    void GivenDataExists_WhenGetStockIsCalled_ThenReturnSuccess() {
+    void GivenDataExists_WhenFetchAndThenGetStockIsCalled_ThenReturnSuccess() {
         var from = LocalDate.of(2025, 2, 9);
         var to = LocalDate.of(2025, 2, 10);
         stockService.fetchAndSaveStockData(SYMBOL, from, to);
@@ -48,7 +48,7 @@ class StockServiceIntegrationTest {
 
     @Test
     @SneakyThrows
-    void GivenDataDoesNotExist_WhenGetStockIsCalled_ThenThrowException() {
+    void GivenDataDoesNotExist_WhenFetchAndThenGetStockIsCalled_ThenThrowException() {
         var from = LocalDate.of(2025, 2, 9);
         var to = LocalDate.of(2025, 2, 10);
         var search = LocalDate.of(2020, 4, 1);
