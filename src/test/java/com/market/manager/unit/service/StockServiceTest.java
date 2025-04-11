@@ -100,7 +100,7 @@ public class StockServiceTest {
 
     @Test
     @SneakyThrows
-    void GivenDataDoesNotExists_WhenFetchIsCalled_ThenDataIsNotSaved(){
+    void GivenDataDoesNotExists_WhenFetchIsCalled_ThenThrowError(){
         var from = LocalDate.of(2025, 2, 9);
         var to = LocalDate.of(2025, 2, 10);
         var emptyStock = buildEmptyStock();
