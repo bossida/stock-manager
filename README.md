@@ -1,6 +1,12 @@
 
 # Getting Started
 
+### Stack :
+
+- *Java 23*  
+- *Spring Boot*  
+- *MySql*
+
 ### Setup instructions
 
 The application will take the api key from an environment varible, 
