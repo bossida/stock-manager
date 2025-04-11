@@ -56,7 +56,7 @@ public class StockService {
 
 
     private void validateDates(LocalDate fromDate, LocalDate toDate) throws InvalidDateException {
-        if (fromDate.isEqual(toDate) || fromDate.isAfter(toDate)){
+        if (fromDate.isAfter(toDate)){
             throw new InvalidDateException(INVALID_DATES);
         }
         if (fromDate.isAfter(LocalDate.now()) || toDate.isAfter(LocalDate.now())){
