@@ -17,6 +17,13 @@ To run the application from command line execute the following :
 ```
 mvn spring-boot:run
 ```
+### Data base access
+
+Ensure that the data base is created in MySql
+
+```
+data base name = stocks_db
+```
 To configure access to MySql set user name and password in file 
 application.properties under src/main/java/resources
 ```
@@ -51,7 +58,7 @@ Returns Http 200
 
 ######  Request
 ``` 
-GET   /stocks/{symbol}?date=2025-02-10
+GET   /stocks/AAPL?date=2025-02-10
 ```
 ###### Response
 ``` json
